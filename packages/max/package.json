@@ -1,0 +1,40 @@
+{
+  "name": "@sortinox/umi-max",
+  "version": "1.0.4",
+  "description": "@sortinox/umi-max",
+  "license": "MIT",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "bin": {
+    "max": "bin/max.js"
+  },
+  "files": [
+    "bin",
+    "dist",
+    "eslint.js",
+    "index.d.ts",
+    "index.js",
+    "plugin-utils.d.ts",
+    "plugin-utils.js",
+    "prettier.js",
+    "stylelint.js",
+    "test-setup.js",
+    "test.d.ts",
+    "test.js"
+  ],
+  "scripts": {
+    "build": "father build",
+    "dev": "father dev"
+  },
+  "dependencies": {
+    "@sortinox/umi-plugins": "^1",
+    "@umijs/lint": "^4",
+    "antd": "^5",
+    "eslint": "^8",
+    "stylelint": "^14",
+    "umi": "^4"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

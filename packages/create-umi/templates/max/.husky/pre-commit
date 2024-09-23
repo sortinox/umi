@@ -1,0 +1,1 @@
+bash -c "npm run format; git add -u"

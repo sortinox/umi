@@ -1,0 +1,13 @@
+.DS_Store
+/node_modules
+/packages/*/node_modules
+/packages/*/dist
+/packages/*/src/**/fixtures/*/dist
+/packages/*/src/**/fixtures/*/.umi
+/packages/*/src/**/fixtures/*/.umi-production
+/libs/*/dist
+/libs/*/node_modules
+/.umi
+/.mfsu
+/.umi-production
+/dist

@@ -1,0 +1,24 @@
+{
+  "name": "@sortinox/create-umi",
+  "version": "1.0.5",
+  "description": "create-umi",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "create-umi": "bin/create-umi.js"
+  },
+  "files": [
+    "dist",
+    "templates"
+  ],
+  "scripts": {
+    "build": "father build"
+  },
+  "dependencies": {
+    "@umijs/utils": "^4"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -1,0 +1,1 @@
+import "@sortinox/umimax/typings"
