@@ -6,15 +6,12 @@ import { isFlattedNodeModulesDir } from "./utils/npmClient"
 import { resolveProjectDep } from "./utils/resolveProjectDep"
 import { withTmpPath } from "./utils/withTmpPath"
 
-// 获取所有 icons
 const antIconsPath = winPath(dirname(require.resolve("@ant-design/icons/package")))
 
 const getAllIcons = () => {
-  // 读取 index.d.ts
   const iconTypePath = join(antIconsPath, "./lib/icons/index.d.ts")
   const iconTypeContent = readFileSync(iconTypePath, "utf-8")
 
-  // 截取 default as ${iconName}, 然后获取 iconName 转换为 map
   return [...iconTypeContent.matchAll(/default as (\w+)/g)].reduce((memo: Record<string, boolean>, cur) => {
     memo[cur[1]] = true
     return memo
@@ -24,7 +21,7 @@ const getAllIcons = () => {
 const ANT_PRO_COMPONENT = "@ant-design/pro-components"
 
 export default (api: IApi) => {
-  let antdVersion = "4.0.0"
+  let antdVersion = "5.0.0"
   try {
     const pkgPath =
       resolveProjectDep({
@@ -51,9 +48,6 @@ export default (api: IApi) => {
     enableBy: api.EnableBy.config,
   })
 
-  /**
-   * 优先去找 '@alipay/tech-ui'，内部项目优先
-   */
   const depList = ["@alipay/tech-ui", ANT_PRO_COMPONENT, "@ant-design/pro-layout"]
 
   const pkgHasDep = depList.find((dep) => {
@@ -65,7 +59,6 @@ export default (api: IApi) => {
   })
 
   const getPkgPath = () => {
-    // 如果techui， components 和 layout 至少有一个在，找到他们的地址
     if (pkgHasDep && existsSync(join(api.cwd, "node_modules", pkgHasDep, "package.json"))) {
       return join(api.cwd, "node_modules", pkgHasDep)
     }
@@ -74,7 +67,6 @@ export default (api: IApi) => {
     if (pkgHasDep && api.cwd !== cwd && existsSync(join(cwd, "node_modules", pkgHasDep, "package.json"))) {
       return join(cwd, "node_modules", pkgHasDep)
     }
-    // 如果项目中没有去找插件依赖的
     return dirname(require.resolve(`${ANT_PRO_COMPONENT}/package.json`))
   }
 
@@ -171,7 +163,6 @@ const mapRoutes = (routes: IRoute[]) => {
     return []
   }
   return routes.map(route => {
-    // 需要 copy 一份, 否则会污染原始数据
     const newRoute = {...route}
     if (route.originPath) {
       newRoute.path = route.originPath
@@ -736,10 +727,10 @@ const Exception: React.FC<{
     <Result
       status={props.route ? '403' : '404'}
       title={props.route ? '403' : '404'}
-      subTitle={props.route ? '抱歉，你无权访问该页面' : '抱歉，你访问的页面不存在'}
+      subTitle={props.route ? 'Sorry, you don't have permission to access this page' : 'Sorry, the page you visited does not exist'}
       extra={
         <Button type="primary" onClick={() => history.push('/')}>
-          返回首页
+          Home
         </Button>
       }
     />

@@ -134,7 +134,6 @@ export const getIntl = (locale?: string, changeIntl?: boolean) => {
     return g_intl;
   }
   if (!locale) locale = getLocale();
-  // 如果存在于 localeInfo 中
   if (locale&&localeInfo[locale]) {
     return _createIntl(locale);
   }

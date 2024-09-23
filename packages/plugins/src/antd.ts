@@ -12,7 +12,7 @@ const ANTD_TEMPLATES_DIR = join(TEMPLATES_DIR, "antd")
 
 export default (api: IApi) => {
   let pkgPath: string
-  let antdVersion = "4.0.0"
+  let antdVersion = "5.0.0"
   try {
     pkgPath =
       resolveProjectDep({
@@ -24,7 +24,6 @@ export default (api: IApi) => {
   } catch (e) {}
 
   const isV5 = antdVersion.startsWith("5")
-  const isV4 = antdVersion.startsWith("4")
   // App components exist only from 5.1.0 onwards
   const appComponentAvailable = semver.gte(antdVersion, "5.1.0")
   const appConfigAvailable = semver.gte(antdVersion, "5.3.0")
@@ -80,27 +79,13 @@ export default (api: IApi) => {
             })
             .deepPartial()
         }
-        const createV4Schema = () => {
-          return zod
-            .object({
-              ...commonSchema,
-              configProvider: zod.record(zod.any()),
-            })
-            .deepPartial()
-        }
         if (isV5) {
           return createV5Schema()
-        }
-        if (isV4) {
-          return createV4Schema()
         }
         return zod.object({})
       },
     },
     enableBy({ userConfig }) {
-      // 由于本插件有 api.modifyConfig 的调用，以及 Umi 框架的限制
-      // 在其他插件中通过 api.modifyDefaultConfig 设置 antd 并不能让 api.modifyConfig 生效
-      // 所以这里通过环境变量来判断是否启用
       return process.env.UMI_PLUGIN_ANTD_ENABLE || userConfig.antd
     },
   })
@@ -150,21 +135,6 @@ export default (api: IApi) => {
       }
     }
 
-    if (isV4) {
-      if (antd.dark || antd.compact) {
-        const { getThemeVariables } = require("antd/dist/theme")
-        memo.theme = {
-          ...getThemeVariables(antd),
-          ...memo.theme,
-        }
-      }
-
-      memo.theme = {
-        "root-entry-name": "default",
-        ...memo.theme,
-      }
-    }
-
     // allow use `antd.theme` as the shortcut of `antd.configProvider.theme`
     if (antd.theme) {
       assert(isV5, `antd.theme is only valid when antd is 5`)
@@ -175,7 +145,7 @@ export default (api: IApi) => {
       // https://github.com/umijs/umi/issues/11156
       assert(
         !antd.configProvider.theme.algorithm,
-        `The 'algorithm' option only available for runtime config, please move it to the runtime plugin, see: https://umijs.org/docs/max/antd#运行时配置`
+        `The 'algorithm' option only available for runtime config, please move it to the runtime plugin, see: https://umijs.org/docs/max/antd`
       )
     }
 
@@ -205,27 +175,6 @@ export default (api: IApi) => {
       }
     }
     return memo
-  })
-
-  // babel-plugin-import
-  api.addExtraBabelPlugins(() => {
-    const style = api.config.antd.style || "less"
-
-    if (api.config.antd.import && !api.appData.vite) {
-      return [
-        [
-          require.resolve("babel-plugin-import"),
-          {
-            libraryName: "antd",
-            libraryDirectory: "es",
-            ...(isV5 ? {} : { style: style === "less" || "css" }),
-          },
-          "antd",
-        ],
-      ]
-    }
-
-    return []
   })
 
   const lodashPkg = dirname(require.resolve("lodash/package.json"))
@@ -361,18 +310,9 @@ export const AntdConfigContextSetter = React.createContext<React.Dispatch<React.
   })
 
   api.addEntryImportsAhead(() => {
-    const style = api.config.antd.style || "less"
     const imports: Awaited<ReturnType<Parameters<IApi["addEntryImportsAhead"]>[0]["fn"]>> = []
-
-    if (isV5) {
-      // import antd@5 reset style
-      imports.push({ source: "antd/dist/reset.css" })
-    } else if (!api.config.antd.import || api.appData.vite) {
-      // import antd@4 style if antd.import is not configured
-      imports.push({
-        source: style === "less" ? "antd/dist/antd.less" : "antd/dist/antd.css",
-      })
-    }
+    // import antd@5 reset style
+    imports.push({ source: "antd/dist/reset.css" })
 
     return imports
   })

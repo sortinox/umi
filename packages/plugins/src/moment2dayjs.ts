@@ -14,7 +14,7 @@ export default (api: IApi) => {
       schema({ zod }) {
         return zod
           .object({
-            preset: zod.enum(["antd", "antdv3", "none"]), // 'antd' | 'antdv3 | 'none'
+            preset: zod.enum(["antd", "none"]), // 'antd' | 'none'
             plugins: zod.array(zod.string()),
           })
           .partial()
@@ -36,19 +36,6 @@ export default (api: IApi) => {
       "localeData",
       "localizedFormat",
     ],
-    antdv3: [
-      "isSameOrBefore",
-      "isSameOrAfter",
-      "advancedFormat",
-      "customParseFormat",
-      "weekday",
-      "weekYear",
-      "weekOfYear",
-      "isMoment",
-      "localeData",
-      "localizedFormat",
-      "badMutable",
-    ],
   }
 
   const getDayjsPlugins = (api: IApi) => {
@@ -57,8 +44,6 @@ export default (api: IApi) => {
     switch (preset) {
       case "antd":
         return Array.from(new Set(presets["antd"].concat(plugins)))
-      case "antdv3":
-        return Array.from(new Set(presets["antdv3"].concat(plugins)))
       case "none":
         return [].concat(plugins)
       default:
