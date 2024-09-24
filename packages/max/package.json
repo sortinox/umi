@@ -29,7 +29,6 @@
   "dependencies": {
     "@sortinox/umi-plugins": ">=1.0.7",
     "@umijs/lint": "^4",
-    "@umijs/preset-umi": "^4",
     "antd": "^5",
     "eslint": "^8",
     "stylelint": "^14",
