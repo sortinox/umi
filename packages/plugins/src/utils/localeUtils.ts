@@ -13,12 +13,6 @@ export interface IGetLocaleFileListOpts {
   resolveKey: string
 }
 
-/**
- * 获取 moment 包的 locale 名称
- * @param lang 语言
- * @param country 国家
- * @param resolveKey 用来resolve的key，moment 或者 dayjs，为了使 dayjs 可以替换 moment
- */
 export const getMomentLocale = (lang: string, country: string, resolveKey: string): { momentLocale: string } => {
   const momentLocation = require.resolve(`${resolveKey}/locale/zh-cn`).replace(/zh\-cn\.js$/, "")
 
@@ -47,12 +41,6 @@ export interface IGetLocaleFileListResult {
   momentLocale: string
 }
 
-/**
- * 有些情况下可能项目包含的locale和antd的不匹配
- * 这个方法用于检测
- * @param localePath
- * @returns
- */
 const modulesHasLocale = (localePath: string) => {
   try {
     require.resolve(localePath)

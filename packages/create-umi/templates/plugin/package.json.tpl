@@ -21,6 +21,7 @@
     "father": "^4.5.0",
     "umi": "{{{ version }}}",
     "@types/node": "^20.11.25",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "webpack": "^5"
   }
 }

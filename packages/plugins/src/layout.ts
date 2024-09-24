@@ -727,7 +727,7 @@ const Exception: React.FC<{
     <Result
       status={props.route ? '403' : '404'}
       title={props.route ? '403' : '404'}
-      subTitle={props.route ? 'Sorry, you don't have permission to access this page' : 'Sorry, the page you visited does not exist'}
+      subTitle={props.route ? 'Sorry, you do not have permission to access this page' : 'Sorry, the page you visited does not exist'}
       extra={
         <Button type="primary" onClick={() => history.push('/')}>
           Home

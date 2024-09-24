@@ -1,6 +1,6 @@
 {
   "name": "@sortinox/umi-plugins",
-  "version": "1.0.5",
+  "version": "1.0.10",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -16,13 +16,12 @@
   "dependencies": {
     "@ant-design/antd-theme-variable": "^1.0.0",
     "@ant-design/cssinjs": "^1.21.1",
-    "@ant-design/icons": "^5.5.1",
+    "@ant-design/icons": "^5",
     "@ant-design/moment-webpack-plugin": "^1.0.0",
     "@ant-design/pro-components": "^2.7",
     "@umijs/bundler-utils": "^4",
     "antd-dayjs-webpack-plugin": "^1.0.6",
     "axios": "^1.7",
-    "babel-plugin-styled-components": "2.1.4",
     "dayjs": "^1.11",
     "event-emitter": "~0.3.5",
     "fast-deep-equal": "3.1.3",

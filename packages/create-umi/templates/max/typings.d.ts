@@ -1,1 +1,1 @@
-import "@sortinox/umimax/typings"
+import "@sortinox/umi-max/typings"

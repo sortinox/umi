@@ -7,6 +7,7 @@ export default defineConfig({
   initialState: {},
   request: {},
   tailwindcss: {},
+  moment2dayjs: {},
   layout: {
     title: "@sortinox/umi-max",
   },

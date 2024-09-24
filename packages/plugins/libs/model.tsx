@@ -50,12 +50,10 @@ function Executor(props: ExecutorProps) {
     console.error(`plugin-model: Invoking '${namespace || "unknown"}' model failed:`, e)
   }
 
-  // 首次执行时立刻返回初始值
   useMemo(() => {
     updateRef.current(data)
   }, [])
 
-  // React 16.13 后 update 函数用 useEffect 包裹
   useEffect(() => {
     if (initialLoad.current) {
       updateRef.current(data)
@@ -128,8 +126,6 @@ export function useModel<N extends Namespaces, S>(namespace: N, selector?: Selec
   useEffect(() => {
     const handler = (data: any) => {
       if (!isMount.current) {
-        // 如果 handler 执行过程中，组件被卸载了，则强制更新全局 data
-        // TODO: 需要加个 example 测试
         setTimeout(() => {
           dispatcher.data[namespace] = data
           dispatcher.update(namespace)
@@ -138,14 +134,13 @@ export function useModel<N extends Namespaces, S>(namespace: N, selector?: Selec
         const currentState = selectorRef.current ? selectorRef.current(data) : data
         const previousState = stateRef.current
         if (!isEqual(currentState, previousState)) {
-          // 避免 currentState 拿到的数据是老的，从而导致 isEqual 比对逻辑有问题
           stateRef.current = currentState
           setState(currentState)
         }
       }
     }
 
-    dispatcher.callbacks[namespace] ||= new Set() as any // rawModels 是 umi 动态生成的文件，导致前面 callback[namespace] 的类型无法推导出来，所以用 as any 来忽略掉
+    dispatcher.callbacks[namespace] ||= new Set() as any
     dispatcher.callbacks[namespace].add(handler)
     dispatcher.update(namespace)
 
