@@ -11,12 +11,12 @@
     "setup": "max setup"
   },
   "dependencies": {
-    "@ant-design/icons": "^5.5",
-    "@ant-design/pro-components": "^2.7",
+    "@ant-design/icons": "^6.1",
+    "@ant-design/pro-components": "^3",
     "@sortinox/umi-max": "{{{ version }}}",
-    "antd": "^5",
-    "react": "^18.3",
-    "react-dom": "^18.3",
+    "antd": "^6",
+    "react": "^19.1",
+    "react-dom": "^19.1",
     "rc-field-form": ">=1.22.0",
     "react-hotkeys-hook": "^4",
     "react-swipeable": "^7",
@@ -24,15 +24,15 @@
   },
   "devDependencies": {
     "@babel/core": "^7",
-    "@types/react": "^18.3",
-    "@types/react-dom": "^18.3",{{#withHusky}}
+    "@types/react": "^19.1",
+    "@types/react-dom": "^19.1",{{#withHusky}}
     "husky": "^9",{{/withHusky}}
     "prettier": "^3.3",
     "prettier-plugin-organize-imports": "^4",
     "prettier-plugin-packagejson": "^2",
     "prettier-plugin-tailwindcss": "^0.6.6",
     "tailwindcss": "^3",
-    "typescript": "^5.2",
+    "typescript": "^5.9",
     "webpack": "^5",
     "styled-components": ">=2"
   }

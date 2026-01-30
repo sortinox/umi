@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from "fs"
 import { dirname, join } from "path"
 import { IApi, RUNTIME_TYPE_FILE_NAME } from "umi"
-import { lodash, Mustache, winPath } from "umi/plugin-utils"
+import { lodash, Mustache, semver, winPath } from "umi/plugin-utils"
 import { isFlattedNodeModulesDir } from "./utils/npmClient"
 import { resolveProjectDep } from "./utils/resolveProjectDep"
 import { withTmpPath } from "./utils/withTmpPath"
@@ -34,8 +34,8 @@ export default (api: IApi) => {
 
   const packageName = api.pkg.name || "plugin-layout"
 
-  const isAntd5 = antdVersion.startsWith("5")
-  const layoutFile = isAntd5 ? "Layout.css" : "Layout.less"
+  const isModern = semver.satisfies(antdVersion, "^5.0.0 || ^6.0.0", { includePrerelease: true })
+  const layoutFile = isModern ? "Layout.css" : "Layout.less"
 
   api.describe({
     key: "layout",
@@ -489,7 +489,6 @@ export function getRightRenderContent (opts: {
         label: (
           <>
             <LogoutOutlined />
-            退出登录
           </>
         ),
         onClick: () => {
@@ -498,26 +497,7 @@ export function getRightRenderContent (opts: {
       },
     ],
   };
-  let dropdownProps;
-  if (version.startsWith("5.") || version.startsWith("4.24.")) {
-    dropdownProps = { menu: langMenu };
-  } else if (version.startsWith("3.")) {
-    dropdownProps = {
-      overlay: (
-        <Menu>
-          {langMenu.items.map((item) => (
-            <Menu.Item key={item.key} onClick={item.onClick}>
-              {item.label}
-            </Menu.Item>
-          ))}
-        </Menu>
-      ),
-    };
-  } else {
-    dropdownProps = { overlay: <Menu {...langMenu} /> };
-  }
-
-
+  let dropdownProps = { menu: langMenu };
 
   return (
     <div className="umi-plugin-layout-right anticon">
@@ -550,7 +530,7 @@ export function getRightRenderContent (opts: {
     api.writeTmpFile({
       path: layoutFile,
       content: `
-${isAntd5 ? "" : "@import '~antd/es/style/themes/default.less';"}
+${isModern ? "" : "@import '~antd/es/style/themes/default.less';"}
 @media screen and (max-width: 480px) {
   .umi-plugin-layout-container {
     width: 100% !important;
@@ -727,10 +707,10 @@ const Exception: React.FC<{
     <Result
       status={props.route ? '403' : '404'}
       title={props.route ? '403' : '404'}
-      subTitle={props.route ? 'Sorry, you do not have permission to access this page' : 'Sorry, the page you visited does not exist'}
+      subTitle={props.route ? 'Sorry, you do not have permission to access this page.' : 'Sorry, the page you are trying to access does not exist.'}
       extra={
         <Button type="primary" onClick={() => history.push('/')}>
-          Home
+          Return to Home
         </Button>
       }
     />

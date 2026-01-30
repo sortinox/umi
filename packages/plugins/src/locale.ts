@@ -61,7 +61,7 @@ export default (api: IApi) => {
     enableBy: api.EnableBy.config,
   })
 
-  const reactIntlPkgPath = winPath(dirname(require.resolve("react-intl/package")))
+  const reactIntlPkgPath = winPath(dirname(require.resolve("react-intl")))
 
   // polyfill
   api.addEntryImportsAhead(() =>

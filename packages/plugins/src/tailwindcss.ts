@@ -4,7 +4,7 @@ import { IApi } from "umi"
 import { crossSpawn, winPath } from "umi/plugin-utils"
 
 const CHECK_INTERVAL = 300
-const CHECK_TIMEOUT_UNIT_SECOND = 5
+const CHECK_TIMEOUT = process.env.CHECK_TIMEOUT ? parseInt(process.env.CHECK_TIMEOUT, 10) : 5
 
 export default (api: IApi) => {
   api.describe({
@@ -56,12 +56,10 @@ export default (api: IApi) => {
         const timer = setTimeout(() => {
           if (!existsSync(generatedPath)) {
             clearInterval(timer)
-            api.logger.error(
-              `tailwindcss generate failed after ${CHECK_TIMEOUT_UNIT_SECOND} seconds, please check your tailwind.css and tailwind.config.js`
-            )
+            api.logger.error(`tailwindcss generate failed after ${CHECK_TIMEOUT} seconds, please check your tailwind.css and tailwind.config.js`)
             process.exit(1)
           }
-        }, CHECK_TIMEOUT_UNIT_SECOND * 1000)
+        }, CHECK_TIMEOUT * 1000)
       }
     })
   })

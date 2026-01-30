@@ -1,6 +1,6 @@
 {
   "name": "@sortinox/umi-plugins",
-  "version": "1.0.10",
+  "version": "1.1.5",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -15,10 +15,10 @@
   },
   "dependencies": {
     "@ant-design/antd-theme-variable": "^1.0.0",
-    "@ant-design/cssinjs": "^1.21.1",
-    "@ant-design/icons": "^5",
+    "@ant-design/cssinjs": "^2.0.3",
+    "@ant-design/icons": "^6.1.0",
     "@ant-design/moment-webpack-plugin": "^1.0.0",
-    "@ant-design/pro-components": "^2.7",
+    "@ant-design/pro-components": "^3.1.2-0",
     "@umijs/bundler-utils": "^4",
     "antd-dayjs-webpack-plugin": "^1.0.6",
     "axios": "^1.7",
@@ -29,10 +29,11 @@
     "lodash": "^4.17",
     "moment": "^2",
     "rc-field-form": ">=1.22.0",
-    "react-intl": "^6"
+    "react-intl": "8.1.1",
+    "warning": "^4.0.3"
   },
   "devDependencies": {
-    "antd": "^5",
+    "antd": "^6",
     "umi": "^4"
   },
   "publishConfig": {

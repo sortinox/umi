@@ -441,7 +441,7 @@ export const SelectLang: React.FC<SelectLangProps> = (props) => {
     })),
   };
 
-  const dropdownProps = { menu: langMenu };
+  let dropdownProps = { menu: langMenu };
   
   const inlineStyle = {
     cursor: "pointer",

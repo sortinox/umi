@@ -23,7 +23,9 @@ export default (api: IApi) => {
     antdVersion = require(`${pkgPath}/package.json`).version
   } catch (e) {}
 
-  const isV5 = antdVersion.startsWith("5")
+  /** antd V5 or v6 */
+  const isModern = semver.satisfies(antdVersion, "^5.0.0 || ^6.0.0", { includePrerelease: true })
+
   // App components exist only from 5.1.0 onwards
   const appComponentAvailable = semver.gte(antdVersion, "5.1.0")
   const appConfigAvailable = semver.gte(antdVersion, "5.3.0")
@@ -49,7 +51,8 @@ export default (api: IApi) => {
             }),
           ])
         }
-        const createV5Schema = () => {
+
+        const createModernSchema = () => {
           // Reason: https://github.com/umijs/umi/pull/11924
           // Refer:  https://github.com/ant-design/ant-design/blob/master/components/theme/interface/components.ts
           const componentNameSchema = zod.string().refine(
@@ -79,8 +82,8 @@ export default (api: IApi) => {
             })
             .deepPartial()
         }
-        if (isV5) {
-          return createV5Schema()
+        if (isModern) {
+          return createModernSchema()
         }
         return zod.object({})
       },
@@ -97,6 +100,16 @@ export default (api: IApi) => {
       throw new Error(`Can't find antd package. Please install antd first.`)
     }
   }
+
+  api.onCheck(() => {
+    // Ant Design v6 requires React 18+
+    if (semver.gte(antdVersion, "6.0.0")) {
+      const reactVersion = api.appData.react.version
+      if (semver.lt(reactVersion, "18.0.0")) {
+        throw new Error(`antd@6 requires React version >= 18.0.0, but got ${reactVersion}.`)
+      }
+    }
+  })
 
   api.modifyAppData((memo) => {
     checkPkgPath()
@@ -120,14 +133,17 @@ export default (api: IApi) => {
     // antd import
     memo.alias.antd = pkgPath
 
-    if (isV5) {
+    if (isModern) {
       const theme = require("@ant-design/antd-theme-variable")
       memo.theme = {
         ...theme,
         ...memo.theme,
       }
+    }
+
+    if (semver.gte(antdVersion, "5.0.0")) {
       if (memo.antd?.import) {
-        const errorMessage = `Can't set antd.import while using antd5 (${antdVersion})`
+        const errorMessage = `The antd.import option is not supported in antd version 5 and above (${antdVersion}).`
 
         api.logger.fatal("please change config antd.import to false, then start server again")
 
@@ -137,16 +153,12 @@ export default (api: IApi) => {
 
     // allow use `antd.theme` as the shortcut of `antd.configProvider.theme`
     if (antd.theme) {
-      assert(isV5, `antd.theme is only valid when antd is 5`)
       antd.configProvider ??= {}
       // priority: antd.theme > antd.configProvider.theme
       antd.configProvider.theme = deepmerge(antd.configProvider.theme || {}, antd.theme)
 
       // https://github.com/umijs/umi/issues/11156
-      assert(
-        !antd.configProvider.theme.algorithm,
-        `The 'algorithm' option only available for runtime config, please move it to the runtime plugin, see: https://umijs.org/docs/max/antd`
-      )
+      assert(!antd.configProvider.theme.algorithm, `The 'algorithm' option only available for runtime config, please move it to the runtime plugin.`)
     }
 
     if (antd.appConfig) {
@@ -177,6 +189,27 @@ export default (api: IApi) => {
     return memo
   })
 
+  // babel-plugin-import
+  api.addExtraBabelPlugins(() => {
+    const style = api.config.antd.style || "less"
+
+    if (api.config.antd.import && !api.appData.vite) {
+      return [
+        [
+          require.resolve("babel-plugin-import"),
+          {
+            libraryName: "antd",
+            libraryDirectory: "es",
+            style: style === "less" || "css",
+          },
+          "antd",
+        ],
+      ]
+    }
+
+    return []
+  })
+
   const lodashPkg = dirname(require.resolve("lodash/package.json"))
   const lodashPath = {
     merge: winPath(join(lodashPkg, "merge")),
@@ -194,7 +227,7 @@ export default (api: IApi) => {
 
     let styleProviderConfig: any = false
 
-    if (isV5 && (ieTarget || styleProvider)) {
+    if (isModern && (ieTarget || styleProvider)) {
       const cssinjs =
         resolveProjectDep({
           pkg: api.pkg,
@@ -208,8 +241,14 @@ export default (api: IApi) => {
         }
 
         if (ieTarget) {
-          styleProviderConfig.hashPriority = "high"
-          styleProviderConfig.legacyTransformer = true
+          if (semver.gte(antdVersion, "6.0.0")) {
+            api.logger.warn(
+              `You are using antd version ${antdVersion} which no longer supports IE, but your targets or legacy config indicates IE support. Please adjust your targets or legacy config accordingly.`
+            )
+          } else {
+            styleProviderConfig.hashPriority = "high"
+            styleProviderConfig.legacyTransformer = true
+          }
         }
 
         styleProviderConfig = {
@@ -222,9 +261,9 @@ export default (api: IApi) => {
     // Template
     const configProvider = withConfigProvider && JSON.stringify(api.config.antd.configProvider)
     const appConfig = appComponentAvailable && JSON.stringify(api.config.antd.appConfig)
-    const enableV5ThemeAlgorithm = isV5 && (userInputCompact || userInputDark) ? { compact: userInputCompact, dark: userInputDark } : false
-    const hasConfigProvider = configProvider || enableV5ThemeAlgorithm
-    const antdConfigSetter = isV5 && hasConfigProvider
+    const enableModernThemeAlgorithm = isModern && (userInputCompact || userInputDark) ? { compact: userInputCompact, dark: userInputDark } : false
+    const hasConfigProvider = configProvider || enableModernThemeAlgorithm
+    const antdConfigSetter = isModern && hasConfigProvider
 
     // We ensure the `theme` config always exists to preserve the theme context.
     //   1. if we do not config the antd `theme`, no theme react context is added.
@@ -244,11 +283,11 @@ export default (api: IApi) => {
         configProvider,
         appConfig,
         styleProvider: styleProviderConfig,
-        enableV5ThemeAlgorithm,
+        enableModernThemeAlgorithm,
         antdConfigSetter,
         modelPluginCompat,
         lodashPath,
-        disableInternalStatic: semver.gt(antdVersion, "4.13.0"),
+        disableInternalStatic: semver.gt(antdVersion, "5.0.0"),
       },
       tplPath: winPath(join(ANTD_TEMPLATES_DIR, "runtime.ts.tpl")),
     })
@@ -310,9 +349,18 @@ export const AntdConfigContextSetter = React.createContext<React.Dispatch<React.
   })
 
   api.addEntryImportsAhead(() => {
+    const style = api.config.antd.style || "less"
     const imports: Awaited<ReturnType<Parameters<IApi["addEntryImportsAhead"]>[0]["fn"]>> = []
-    // import antd@5 reset style
-    imports.push({ source: "antd/dist/reset.css" })
+
+    if (isModern) {
+      // import reset style
+      imports.push({ source: "antd/dist/reset.css" })
+    } else if (!api.config.antd.import || api.appData.vite) {
+      // import antd@4 style if antd.import is not configured
+      imports.push({
+        source: style === "less" ? "antd/dist/antd.less" : "antd/dist/antd.css",
+      })
+    }
 
     return imports
   })

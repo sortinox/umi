@@ -1,6 +1,6 @@
 {
   "name": "@sortinox/umi-max",
-  "version": "1.0.10",
+  "version": "1.1.5",
   "description": "@sortinox/umi-max",
   "license": "MIT",
   "main": "index.js",
@@ -27,11 +27,11 @@
     "dev": "father dev"
   },
   "dependencies": {
-    "@sortinox/umi-plugins": ">=1.0.7",
+    "@sortinox/umi-plugins": ">=1.1.5",
     "@umijs/lint": "^4",
-    "antd": "^5",
-    "eslint": "^8",
-    "stylelint": "^14",
+    "antd": "^6",
+    "eslint": "^9",
+    "stylelint": "^17",
     "umi": "^4"
   },
   "publishConfig": {
