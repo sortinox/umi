@@ -29,7 +29,7 @@
     "husky": "^9",{{/withHusky}}
     "prettier": "^3.3",
     "prettier-plugin-organize-imports": "^4",
-    "prettier-plugin-packagejson": "^2",
+    "prettier-plugin-packagejson": "^3",
     "prettier-plugin-tailwindcss": "^0.6.6",
     "tailwindcss": "^3",
     "typescript": "^5.9",
