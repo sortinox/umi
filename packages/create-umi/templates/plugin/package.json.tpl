@@ -1,7 +1,7 @@
 {
   "name": "{{{ pluginName }}}",
   "author": "{{{ author }}}",
-  "version": "{{{ version }}}",
+  "version": "0.0.1",
   "main": "dist/cjs/index.js",
   "types": "dist/cjs/index.d.ts",
   "scripts": {
