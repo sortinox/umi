@@ -1,7 +1,7 @@
 {
   "name": "{{{ pluginName }}}",
   "author": "{{{ author }}}",
-  "version": "0.0.1",
+  "version": "{{{ version }}}",
   "main": "dist/cjs/index.js",
   "types": "dist/cjs/index.d.ts",
   "scripts": {
@@ -19,7 +19,7 @@
   ],
   "devDependencies": {
     "father": "^4.5.0",
-    "umi": "{{{ version }}}",
+    "umi": "^4",
     "@types/node": "^25.1.0",
     "typescript": "^5.9.2",
     "webpack": "^5"

@@ -12,5 +12,5 @@
     "jsx": "react",
     "lib": ["dom", "dom.iterable", "esnext"]
   },
-  "exclude": ["**/node_modules", "**/dist", "**/fixtures", "**/*.test.ts", "**/*.e2e.ts", "**/templates"]
+  "exclude": ["**/node_modules", "**/dist", "**/fixtures", "**/*.test.ts", "**/*.e2e.ts", "**/templates", "packages/create-umi/templates/**"]
 }
