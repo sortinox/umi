@@ -7,8 +7,8 @@ const version = process.argv[2]
 
 if (!version) {
   console.error("Error: Please provide a version string")
-  console.error("Usage: yarn bump <version>")
-  console.error("Example: yarn bump 1.2.0")
+  console.error("Usage: pnpm bump <version>")
+  console.error("Example: pnpm bump 1.2.0")
   process.exit(1)
 }
 
