@@ -18,7 +18,7 @@
     "@ant-design/cssinjs": "^2.0.3",
     "@ant-design/icons": "^6.1.0",
     "@ant-design/moment-webpack-plugin": "^1.0.0",
-    "@ant-design/pro-components": "^3.1.2-0",
+    "@ant-design/pro-components": "^3.1.4-0",
     "@umijs/bundler-utils": "^4",
     "antd-dayjs-webpack-plugin": "^1.0.6",
     "axios": "^1.7",
