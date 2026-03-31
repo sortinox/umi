@@ -1,6 +1,6 @@
 {
   "name": "@sortinox/create-umi",
-  "version": "1.1.9",
+  "version": "1.1.10",
   "description": "create-umi",
   "license": "MIT",
   "main": "dist/index.js",
