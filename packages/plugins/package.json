@@ -1,6 +1,6 @@
 {
   "name": "@sortinox/umi-plugins",
-  "version": "1.1.7",
+  "version": "1.1.9",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -21,7 +21,7 @@
     "@ant-design/pro-components": "^3.1.4-0",
     "@umijs/bundler-utils": "^4",
     "antd-dayjs-webpack-plugin": "^1.0.6",
-    "axios": "^1.7",
+    "axios": "1.13.5",
     "dayjs": "^1.11",
     "event-emitter": "~0.3.5",
     "fast-deep-equal": "3.1.3",
